@@ -30,6 +30,13 @@ resource "digitalocean_droplet" "devbox" {
   size       = "s-1vcpu-1gb"
   monitoring = true
   ssh_keys   = ["${digitalocean_ssh_key.dev.fingerprint}"]
+
+  provisioner "remove-exec" {
+    inline = [
+      "git clone https://github.com/JamesHageman/dev",
+      "~/dev/bootstrap.sh",
+    ]
+  }
 }
 
 # Create a floating (static) ip for the droplet
