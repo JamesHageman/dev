@@ -25,7 +25,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   rm -f ~/.zshrc
 fi
 
-ln -sf "$(dirname "$0")"/.zshrc "$HOME/.zshrc"
+ln -sf "$(realpath "$0")"/.zshrc "$HOME/.zshrc"
 
 zsh_plugins="$HOME/.oh-my-zsh/custom/plugins"
 autosuggestions="$zsh_plugins/zsh-autosuggestions"
@@ -41,5 +41,5 @@ fi
 
 if [ ! -d "$HOME/.fzf" ]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf
-  "$HOME"/.fzf/install
+  "$HOME"/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
 fi
