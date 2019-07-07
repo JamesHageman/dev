@@ -39,7 +39,7 @@ function install_packages {
   pkgs=$(uninstalled_packages "$@")
   if [ -n "$pkgs" ]; then
     apt-get update
-    apt-get install -y "$pkgs"
+    apt-get install -y $pkgs
   fi
 }
 
