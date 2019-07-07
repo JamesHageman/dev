@@ -46,7 +46,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   curl -Lo install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
   chmod +x install.sh
   cat install.sh
-  RUNZSH=no CHSH=yes ./install.sh
+  echo "y" | RUNZSH=no CHSH=yes ./install.sh
   rm -f install.sh
   rm -f ~/.zshrc
 fi
