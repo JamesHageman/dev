@@ -4,12 +4,34 @@ set -ex
 
 script_path=$(dirname "$(realpath "$0")")
 
+function retry_times {
+  retries=$1
+  command=$2
+  delay=5
+
+  n=0
+  while [ $n -le "$retries" ]; do
+    if "$command"; then
+      break
+    fi
+
+    n=$((n + 1))
+    if [ $n -eq "$retries" ]; then
+      echo "($n/$retries) command '$command' failed."
+      return 1
+    else
+      echo "($n/$retries) command '$command' failed. Retrying in ${delay}s"
+      sleep $delay
+    fi
+  done
+}
+
 function install_packages {
-  sudo apt-get update
+  retry_times 4 "sudo apt-get update"
   for pkg in "${@}"
   do
     if ! dpkg -s "$pkg" | grep "installed"; then
-      sudo apt-get install -y "$pkg"
+      retry_times 4 "sudo apt-get install -y '$pkg'"
     fi
   done
 }
