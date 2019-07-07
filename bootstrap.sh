@@ -38,11 +38,12 @@ function uninstalled_packages {
 function install_packages {
   pkgs=$(uninstalled_packages "$@")
   if [ -n "$pkgs" ]; then
-    retry_times 5 "apt-get update && apt-get install -y $pkgs"
+    apt-get update
+    apt-get install -y "$pkgs"
   fi
 }
 
-install_packages jq tree mosh zsh
+retry_times 5 install_packages jq tree mosh zsh
 
 if [ ! -f /etc/locale.gen ] || ! grep -q "^en_CA\.UTF-8" /etc/locale.gen ; then
   locale-gen en_CA.UTF-8
