@@ -11,7 +11,7 @@ function retry_times {
 
   n=0
   while [ $n -le "$retries" ]; do
-    if "$command"; then
+    if $command; then
       break
     fi
 
@@ -27,11 +27,11 @@ function retry_times {
 }
 
 function install_packages {
-  retry_times 4 "sudo apt-get update"
+  retry_times 5 "apt-get update"
   for pkg in "${@}"
   do
     if ! dpkg -s "$pkg" | grep "installed"; then
-      retry_times 4 "sudo apt-get install -y '$pkg'"
+      retry_times 5 "apt-get install -y $pkg"
     fi
   done
 }

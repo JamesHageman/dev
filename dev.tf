@@ -42,6 +42,7 @@ resource "digitalocean_droplet" "devbox" {
   provisioner "remote-exec" {
     inline = [
       "git clone https://github.com/JamesHageman/dev",
+      "./dev/bootstrap.sh",
     ]
   }
 }
