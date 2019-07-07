@@ -1,13 +1,10 @@
 variable "digitalocean_token" {}
 variable "ssh_public_key" {}
 variable "local_public_ip_address" {}
+variable "region" {}
 
 variable "droplet_name" {
   default = "dev1"
-}
-
-variable "region" {
-  default = "sfo2"
 }
 
 provider "digitalocean" {
@@ -27,12 +24,12 @@ resource "digitalocean_ssh_key" "dev" {
 
 # Create a new Droplet using the SSH key
 resource "digitalocean_droplet" "devbox" {
-  image    = "ubuntu-18-04-x64"
-  name     = "${var.droplet_name}.${var.region}"
-  region   = "${var.region}"
-  size     = "s-1vcpu-1gb"
+  image      = "ubuntu-18-04-x64"
+  name       = "${var.droplet_name}.${var.region}"
+  region     = "${var.region}"
+  size       = "s-1vcpu-1gb"
   monitoring = true
-  ssh_keys = ["${digitalocean_ssh_key.dev.fingerprint}"]
+  ssh_keys   = ["${digitalocean_ssh_key.dev.fingerprint}"]
 }
 
 # Create a floating (static) ip for the droplet
@@ -57,9 +54,14 @@ resource "digitalocean_firewall" "laptop_ssh" {
 
   inbound_rule = [
     {
-      protocol           = "tcp"
-      port_range         = "22"
-      source_addresses   = ["${var.local_public_ip_address}"]
+      protocol         = "tcp"
+      port_range       = "22"
+      source_addresses = ["${var.local_public_ip_address}"]
+    },
+    {
+      protocol         = "udp"
+      port_range       = "60000-61000"
+      source_addresses = ["${var.local_public_ip_address}"]
     },
   ]
 }
@@ -71,18 +73,18 @@ resource "digitalocean_firewall" "public_egress" {
 
   outbound_rule = [
     {
-      protocol                = "tcp"
-      port_range              = "1-65535"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
+      protocol              = "tcp"
+      port_range            = "1-65535"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
     },
     {
-      protocol                = "udp"
-      port_range              = "1-65535"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
+      protocol              = "udp"
+      port_range            = "1-65535"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
     },
     {
-      protocol                = "icmp"
-      destination_addresses   = ["0.0.0.0/0", "::/0"]
+      protocol              = "icmp"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
     },
   ]
 }
