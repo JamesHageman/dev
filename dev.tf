@@ -1,4 +1,5 @@
 variable "digitalocean_token" {}
+variable "ssh_private_key_file" {}
 variable "ssh_public_key" {}
 variable "local_public_ip_address" {}
 variable "region" {}
@@ -31,10 +32,16 @@ resource "digitalocean_droplet" "devbox" {
   monitoring = true
   ssh_keys   = ["${digitalocean_ssh_key.dev.fingerprint}"]
 
-  provisioner "remove-exec" {
+  connection {
+    user        = "root"
+    type        = "ssh"
+    private_key = "${file(var.ssh_private_key_file)}"
+    timeout     = "2m"
+  }
+
+  provisioner "remote-exec" {
     inline = [
       "git clone https://github.com/JamesHageman/dev",
-      "~/dev/bootstrap.sh",
     ]
   }
 }
