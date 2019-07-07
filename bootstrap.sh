@@ -2,6 +2,8 @@
 
 set -ex
 
+script_path=$(dirname "$(realpath "$0")")
+
 function install_packages {
   sudo apt-get update
   for pkg in "${@}"
@@ -25,7 +27,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   rm -f ~/.zshrc
 fi
 
-ln -sf "$(realpath "$0")"/.zshrc "$HOME/.zshrc"
+ln -sf "$script_path"/.zshrc "$HOME/.zshrc"
 
 zsh_plugins="$HOME/.oh-my-zsh/custom/plugins"
 autosuggestions="$zsh_plugins/zsh-autosuggestions"
