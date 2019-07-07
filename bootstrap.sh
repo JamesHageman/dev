@@ -43,7 +43,7 @@ function install_packages {
   fi
 }
 
-retry_times 5 install_packages jq tree mosh zsh
+retry_times 5 "install_packages jq tree mosh zsh"
 
 if [ ! -f /etc/locale.gen ] || ! grep -q "^en_CA\.UTF-8" /etc/locale.gen ; then
   locale-gen en_CA.UTF-8
