@@ -16,7 +16,9 @@ function install_packages {
 
 install_packages jq tree mosh zsh
 
-locale-gen en_CA.UTF-8
+if [ ! -f /etc/locale.gen ] || ! grep -q "^en_CA\.UTF-8" /etc/locale.gen ; then
+  locale-gen en_CA.UTF-8
+fi
 
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   curl -Lo install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
