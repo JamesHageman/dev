@@ -26,14 +26,20 @@ function retry_times {
   done
 }
 
-function install_packages {
-  retry_times 5 "apt-get update"
+function uninstalled_packages {
   for pkg in "${@}"
   do
     if ! dpkg -s "$pkg" | grep "installed"; then
-      retry_times 5 "apt-get install -y $pkg"
+      echo "$pkg"
     fi
   done
+}
+
+function install_packages {
+  pkgs=$(uninstalled_packages "$@")
+  if [ -n "$pkgs" ]; then
+    retry_times 5 "apt-get update && apt-get install -y $pkgs"
+  fi
 }
 
 install_packages jq tree mosh zsh
